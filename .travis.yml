@@ -1,2 +1,2 @@
 language: csharp
-solution: Pokemon Go Rocket API.sln
+solution: "Pokemon Go Rocket API.sln"
