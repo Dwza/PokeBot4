@@ -1,6 +1,8 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/d820gn08fa3pwuih?svg=true)](https://ci.appveyor.com/project/shiftcodeYT/pokebot3)
 
-# Bot isn't working, because niantic changed the API. Stay tuned for fix. [More here](https://github.com/shiftcodeYT/PokeBot3/issues/123)
+# Bot is NOT working, because niantic changed the API. Stay tuned for fix. [More here](https://github.com/shiftcodeYT/PokeBot3/issues/123)
+# Please stop opening issues or telling me it isnt working, that'll just make a fix taking LONGER. Thank you.
+# Furthermore, I added autoBuild. Please check notes before downloading, as there may be many releases before it's fixed due to autoBuild.
 
 # Pokemon Go Bot in CSharp
 
