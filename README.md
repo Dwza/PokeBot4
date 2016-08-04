@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/d820gn08fa3pwuih?svg=true)](https://ci.appveyor.com/project/shiftcodeYT/pokebot3)
+
 # Pokemon Go Bot in CSharp
 
 ## Features:
@@ -34,13 +36,18 @@
 - [PayPal](http://paypal.me/shiftcodeyt)
 - [Bitcoin:](bitcoin:1C7obv5u5m6SsMQeGsMLrw7kdoVZbkVrX5) 1C7obv5u5m6SsMQeGsMLrw7kdoVZbkVrX5
 
-### Donator Perks:
+### Donator Perks(10$ and up):
+- The feeling to have done something good
 - Special Donation Rank(with colorz) on Discord
 - Beta Relesaes
 - Priority Support & Priorized Suggestions
 - if i find more ill put it here*
 
 ### Donators
-- Anonymous (20€)
-- [disron](https://github.com/disron) (5$)
+- Anonymous (30€)
+- [Belelusat](https://github.com/Belelusat) (10€)
+- Anonymous (10€)
+- [MrPrecise](https://github.com/MrPrecise) (10$)
 - Blubbll (5€)
+- Dvir.os (5$)
+- [disron](https://github.com/disron) (5$)
