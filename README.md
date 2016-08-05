@@ -1,5 +1,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/d820gn08fa3pwuih?svg=true)](https://ci.appveyor.com/project/shiftcodeYT/pokebot3)
-
+[![Stories Ready](https://badge.waffle.io/shiftcodeYT/PokeBot3.png?label=ready&title=Ready)](https://waffle.io/shiftcodeYT/PokeBot3)
+[![Stories in Progress](https://badge.waffle.io/shiftcodeYT/PokeBot3.png?label=in%20progress&title=In%20Progress)](https://waffle.io/shiftcodeYT/PokeBot3)
+https://badge.waffle.io/shiftcodeYT/PokeBot3.png?label=in%20progress&title=in%20progress
 # Bot is NOT working, because niantic changed the API. I'm working on a fix. [More here](https://github.com/shiftcodeYT/PokeBot3/issues/123)
 # Please stop opening issues or telling me it isnt working, that'll just make a fix taking LONGER. Thank you.
 # Furthermore, I added autoBuild. Please check notes before downloading, as there may be many releases before it's fixed due to autoBuild.
