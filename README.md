@@ -36,9 +36,10 @@
 
 ## Support
 - Join our discord at https://discord.gg/jP4Nf2g
+- Join our forum: http://PokeBot.pw
 
 ## Donations (i was asked)
-- [PayPal](http://paypal.me/shiftcodeyt)
+- [PayPal] (http://pokebot.pw)
 - [Bitcoin:](bitcoin:1C7obv5u5m6SsMQeGsMLrw7kdoVZbkVrX5) 1C7obv5u5m6SsMQeGsMLrw7kdoVZbkVrX5
 
 ### Donator Perks(10$ and up):
