@@ -41,20 +41,20 @@
 			this.username = new System.Windows.Forms.Label();
 			this.toggleconsole = new System.Windows.Forms.Button();
 			this.togglelist = new System.Windows.Forms.Button();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.pokeballs = new System.Windows.Forms.Label();
 			this.greatballs = new System.Windows.Forms.Label();
 			this.ultraballs = new System.Windows.Forms.Label();
 			this.masterballs = new System.Windows.Forms.Label();
-			this.maxpotions = new System.Windows.Forms.Label();
-			this.hyperpotions = new System.Windows.Forms.Label();
-			this.superpotions = new System.Windows.Forms.Label();
 			this.potions = new System.Windows.Forms.Label();
-			this.luckyegg = new System.Windows.Forms.Label();
-			this.incense = new System.Windows.Forms.Label();
-			this.maxrevives = new System.Windows.Forms.Label();
+			this.superpotions = new System.Windows.Forms.Label();
+			this.hyperpotions = new System.Windows.Forms.Label();
+			this.maxpotions = new System.Windows.Forms.Label();
 			this.revives = new System.Windows.Forms.Label();
+			this.maxrevives = new System.Windows.Forms.Label();
+			this.incense = new System.Windows.Forms.Label();
+			this.luckyegg = new System.Windows.Forms.Label();
 			this.berry = new System.Windows.Forms.Label();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
@@ -186,28 +186,6 @@
 			this.togglelist.UseVisualStyleBackColor = true;
 			this.togglelist.Click += new System.EventHandler(this.togglelist_Click);
 			// 
-			// groupBox2
-			// 
-			this.groupBox2.Controls.Add(this.berry);
-			this.groupBox2.Controls.Add(this.luckyegg);
-			this.groupBox2.Controls.Add(this.incense);
-			this.groupBox2.Controls.Add(this.maxrevives);
-			this.groupBox2.Controls.Add(this.revives);
-			this.groupBox2.Controls.Add(this.maxpotions);
-			this.groupBox2.Controls.Add(this.hyperpotions);
-			this.groupBox2.Controls.Add(this.superpotions);
-			this.groupBox2.Controls.Add(this.potions);
-			this.groupBox2.Controls.Add(this.masterballs);
-			this.groupBox2.Controls.Add(this.ultraballs);
-			this.groupBox2.Controls.Add(this.greatballs);
-			this.groupBox2.Controls.Add(this.pokeballs);
-			this.groupBox2.Location = new System.Drawing.Point(12, 285);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(260, 190);
-			this.groupBox2.TabIndex = 4;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Items";
-			// 
 			// pokeballs
 			// 
 			this.pokeballs.AutoSize = true;
@@ -244,23 +222,14 @@
 			this.masterballs.TabIndex = 3;
 			this.masterballs.Text = "0 MasterBalls";
 			// 
-			// maxpotions
+			// potions
 			// 
-			this.maxpotions.AutoSize = true;
-			this.maxpotions.Location = new System.Drawing.Point(7, 106);
-			this.maxpotions.Name = "maxpotions";
-			this.maxpotions.Size = new System.Drawing.Size(71, 13);
-			this.maxpotions.TabIndex = 7;
-			this.maxpotions.Text = "0 MaxPotions";
-			// 
-			// hyperpotions
-			// 
-			this.hyperpotions.AutoSize = true;
-			this.hyperpotions.Location = new System.Drawing.Point(7, 93);
-			this.hyperpotions.Name = "hyperpotions";
-			this.hyperpotions.Size = new System.Drawing.Size(79, 13);
-			this.hyperpotions.TabIndex = 6;
-			this.hyperpotions.Text = "0 HyperPotions";
+			this.potions.AutoSize = true;
+			this.potions.Location = new System.Drawing.Point(7, 67);
+			this.potions.Name = "potions";
+			this.potions.Size = new System.Drawing.Size(51, 13);
+			this.potions.TabIndex = 4;
+			this.potions.Text = "0 Potions";
 			// 
 			// superpotions
 			// 
@@ -271,41 +240,23 @@
 			this.superpotions.TabIndex = 5;
 			this.superpotions.Text = "0 SuperPotions";
 			// 
-			// potions
+			// hyperpotions
 			// 
-			this.potions.AutoSize = true;
-			this.potions.Location = new System.Drawing.Point(7, 67);
-			this.potions.Name = "potions";
-			this.potions.Size = new System.Drawing.Size(51, 13);
-			this.potions.TabIndex = 4;
-			this.potions.Text = "0 Potions";
+			this.hyperpotions.AutoSize = true;
+			this.hyperpotions.Location = new System.Drawing.Point(7, 93);
+			this.hyperpotions.Name = "hyperpotions";
+			this.hyperpotions.Size = new System.Drawing.Size(79, 13);
+			this.hyperpotions.TabIndex = 6;
+			this.hyperpotions.Text = "0 HyperPotions";
 			// 
-			// luckyegg
+			// maxpotions
 			// 
-			this.luckyegg.AutoSize = true;
-			this.luckyegg.Location = new System.Drawing.Point(7, 158);
-			this.luckyegg.Name = "luckyegg";
-			this.luckyegg.Size = new System.Drawing.Size(69, 13);
-			this.luckyegg.TabIndex = 11;
-			this.luckyegg.Text = "0 LuckyEggs";
-			// 
-			// incense
-			// 
-			this.incense.AutoSize = true;
-			this.incense.Location = new System.Drawing.Point(7, 145);
-			this.incense.Name = "incense";
-			this.incense.Size = new System.Drawing.Size(54, 13);
-			this.incense.TabIndex = 10;
-			this.incense.Text = "0 Incense";
-			// 
-			// maxrevives
-			// 
-			this.maxrevives.AutoSize = true;
-			this.maxrevives.Location = new System.Drawing.Point(7, 132);
-			this.maxrevives.Name = "maxrevives";
-			this.maxrevives.Size = new System.Drawing.Size(75, 13);
-			this.maxrevives.TabIndex = 9;
-			this.maxrevives.Text = "0 MaxRevives";
+			this.maxpotions.AutoSize = true;
+			this.maxpotions.Location = new System.Drawing.Point(7, 106);
+			this.maxpotions.Name = "maxpotions";
+			this.maxpotions.Size = new System.Drawing.Size(71, 13);
+			this.maxpotions.TabIndex = 7;
+			this.maxpotions.Text = "0 MaxPotions";
 			// 
 			// revives
 			// 
@@ -316,6 +267,33 @@
 			this.revives.TabIndex = 8;
 			this.revives.Text = "0 Revives";
 			// 
+			// maxrevives
+			// 
+			this.maxrevives.AutoSize = true;
+			this.maxrevives.Location = new System.Drawing.Point(7, 132);
+			this.maxrevives.Name = "maxrevives";
+			this.maxrevives.Size = new System.Drawing.Size(75, 13);
+			this.maxrevives.TabIndex = 9;
+			this.maxrevives.Text = "0 MaxRevives";
+			// 
+			// incense
+			// 
+			this.incense.AutoSize = true;
+			this.incense.Location = new System.Drawing.Point(7, 145);
+			this.incense.Name = "incense";
+			this.incense.Size = new System.Drawing.Size(54, 13);
+			this.incense.TabIndex = 10;
+			this.incense.Text = "0 Incense";
+			// 
+			// luckyegg
+			// 
+			this.luckyegg.AutoSize = true;
+			this.luckyegg.Location = new System.Drawing.Point(7, 158);
+			this.luckyegg.Name = "luckyegg";
+			this.luckyegg.Size = new System.Drawing.Size(69, 13);
+			this.luckyegg.TabIndex = 11;
+			this.luckyegg.Text = "0 LuckyEggs";
+			// 
 			// berry
 			// 
 			this.berry.AutoSize = true;
@@ -324,6 +302,28 @@
 			this.berry.Size = new System.Drawing.Size(45, 13);
 			this.berry.TabIndex = 12;
 			this.berry.Text = "0 Berrys";
+			// 
+			// groupBox2
+			// 
+			this.groupBox2.Controls.Add(this.berry);
+			this.groupBox2.Controls.Add(this.luckyegg);
+			this.groupBox2.Controls.Add(this.incense);
+			this.groupBox2.Controls.Add(this.maxrevives);
+			this.groupBox2.Controls.Add(this.revives);
+			this.groupBox2.Controls.Add(this.maxpotions);
+			this.groupBox2.Controls.Add(this.hyperpotions);
+			this.groupBox2.Controls.Add(this.superpotions);
+			this.groupBox2.Controls.Add(this.potions);
+			this.groupBox2.Controls.Add(this.masterballs);
+			this.groupBox2.Controls.Add(this.ultraballs);
+			this.groupBox2.Controls.Add(this.greatballs);
+			this.groupBox2.Controls.Add(this.pokeballs);
+			this.groupBox2.Location = new System.Drawing.Point(12, 285);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(260, 190);
+			this.groupBox2.TabIndex = 4;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "Items";
 			// 
 			// Stats
 			// 
@@ -362,19 +362,19 @@
 		private System.Windows.Forms.Label username;
 		private System.Windows.Forms.Button toggleconsole;
 		private System.Windows.Forms.Button togglelist;
-		private System.Windows.Forms.GroupBox groupBox2;
-		private System.Windows.Forms.Label luckyegg;
-		private System.Windows.Forms.Label incense;
-		private System.Windows.Forms.Label maxrevives;
-		private System.Windows.Forms.Label revives;
-		private System.Windows.Forms.Label maxpotions;
-		private System.Windows.Forms.Label hyperpotions;
-		private System.Windows.Forms.Label superpotions;
-		private System.Windows.Forms.Label potions;
-		private System.Windows.Forms.Label masterballs;
-		private System.Windows.Forms.Label ultraballs;
-		private System.Windows.Forms.Label greatballs;
 		private System.Windows.Forms.Label pokeballs;
+		private System.Windows.Forms.Label greatballs;
+		private System.Windows.Forms.Label ultraballs;
+		private System.Windows.Forms.Label masterballs;
+		private System.Windows.Forms.Label potions;
+		private System.Windows.Forms.Label superpotions;
+		private System.Windows.Forms.Label hyperpotions;
+		private System.Windows.Forms.Label maxpotions;
+		private System.Windows.Forms.Label revives;
+		private System.Windows.Forms.Label maxrevives;
+		private System.Windows.Forms.Label incense;
+		private System.Windows.Forms.Label luckyegg;
 		private System.Windows.Forms.Label berry;
+		private System.Windows.Forms.GroupBox groupBox2;
 	}
 }

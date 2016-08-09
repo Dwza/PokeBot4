@@ -1,173 +1,336 @@
 using System;
 using System.Threading.Tasks;
 using PokemonGo.RocketAPI.Exceptions;
+using System.Reflection;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using System.Collections.Generic;
-using PokemonGo.RocketAPI.GeneratedCode;
+using System.Collections.Generic; 
 using System.IO;
-using System.Text;
-using System.Diagnostics;
+using PokemonGo.RocketAPI.Logic.Utils;
+using POGOProtos.Enums;
 
 namespace PokemonGo.RocketAPI.Console
 {
-    public class Program
+    internal class Program
     {
-        private static readonly Version CurrentVersion = new Version("3.1.2");
         public static string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configs");
+        public static string path_translation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Translations");
         public static string account = Path.Combine(path, "Config.txt");
         public static string items = Path.Combine(path, "Items.txt");
         public static string keep = Path.Combine(path, "noTransfer.txt");
-        public static string ignore = Path.Combine(path, "Unwanted.txt");
+        public static string ignore = Path.Combine(path, "noCatch.txt");
         public static string evolve = Path.Combine(path, "Evolve.txt");
-        private static string data;
-        public static Pokemons PokemonList;
+        public static string lastcords = Path.Combine(path, "LastCoords.txt");
+        public static string huntstats = Path.Combine(path, "HuntStats.txt");
+        public static string cmdCoords = string.Empty;
+
         [STAThread]
         static void Main(string[] args)
         {
-            System.Console.WriteLine("Current Version: " + CurrentVersion);
-            string urlAddress = "http://pastebin.com/raw/5xi0UDAv";
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (args != null && args.Length > 0)
             {
-                Stream receiveStream = response.GetResponseStream();
-                StreamReader readStream = null;
-                if (response.CharacterSet == null)
-                    readStream = new StreamReader(receiveStream);
-                else
-                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                data = readStream.ReadToEnd();
-                response.Close();
-                readStream.Close();
-                var newVersion = new Version(data);
-                var versionResult = CurrentVersion.CompareTo(newVersion);
-                if (versionResult >= 0)
+                foreach (string arg in args)
                 {
-                    System.Console.WriteLine("Newest version: " + data);
-                    System.Console.WriteLine("You are already using the newest version.");
+                    if (arg.Contains(","))
+                    {
+                        Logger.ColoredConsoleWrite(ConsoleColor.Green, $"Found coordinates in command line: {arg}");
+                        if (File.Exists(lastcords))
+                        {
+                            Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Last coords file exists, trying to delete it");
+                            File.Delete(lastcords);
+                        }
+
+                        cmdCoords = arg;
+                    }
                 }
-                else
+            }
+
+
+            if (args != null && args.Length > 0 && args[0].Contains("-nogui"))
+            {
+                Logger.ColoredConsoleWrite(ConsoleColor.Red, "You added -nogui! If you didnt setup correctly with the GUI. It wont work.");
+                foreach (PokemonId pokemon in Enum.GetValues(typeof(PokemonId)))
                 {
-                    System.Console.WriteLine("Newest version: " + data);
-                    System.Console.WriteLine("There is a newer version avaliable on GitHub. Opening link in 5 Seconds.");
-                    Thread.Sleep(5000);
-                    Process.Start("http://github.com/shiftcodeYT/PokeBot3/releases/latest");
-                    System.Environment.Exit(1);
+                    if (pokemon.ToString() != "Missingno")
+                    {
+                        GUI.gerEng[StringUtils.getPokemonNameGer(pokemon)] = pokemon.ToString();
+                    }
+                }
+                int i = 0;
+                if (File.Exists(account))
+                {
+                    string[] lines = File.ReadAllLines(@account);
+                    foreach (string line in lines)
+                    {
+                        try
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    if (line == "Google")
+                                        Globals.acc = Enums.AuthType.Google;
+                                    else
+                                        Globals.acc = Enums.AuthType.Ptc;
+                                    break;
+                                case 1:
+                                    Globals.username = line;
+                                    break;
+                                case 2:
+                                    Globals.password = line;
+                                    break;
+                                case 3:
+                                    if (line.Split('.').Length - 1 > 1)
+                                    { // Coords in one line, comma-delimited.
+                                        string[] crdParts = line.Split(',');
+                                        Globals.latitute = double.Parse(crdParts[0].Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
+                                        Globals.longitude = double.Parse(crdParts[1].Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
+                                        i++;
+                                    }
+                                    else
+                                    {
+                                        Globals.latitute = double.Parse(line.Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
+                                    }
+                                    break;
+                                case 4:
+                                    Globals.longitude = double.Parse(line.Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
+                                    break;
+                                case 5:
+                                    Globals.altitude = double.Parse(line.Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
+                                    break;
+                                case 6:
+                                    Globals.speed = double.Parse(line.Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
+                                    break;
+                                case 7:
+                                    Globals.radius = int.Parse(line);
+                                    break;
+                                case 8:
+                                    Globals.defLoc = bool.Parse(line);
+                                    break;
+                                case 9:
+                                    Globals.transfer = bool.Parse(line);
+                                    break;
+                                case 10:
+                                    Globals.duplicate = int.Parse(line);
+                                    break;
+                                case 11:
+                                    Globals.evolve = bool.Parse(line);
+                                    break;
+                                case 12:
+                                    Globals.maxCp = int.Parse(line);
+                                    break;
+                                case 13:
+                                    Globals.telAPI = line;
+                                    break;
+                                case 14:
+                                    Globals.telName = line;
+                                    break;
+                                case 15:
+                                    Globals.telDelay = int.Parse(line);
+                                    break;
+                                case 16:
+                                    //Globals.telDelay = int.Parse(line);
+                                    // NavigationOption...
+                                    break;
+                                case 17:
+                                    Globals.useluckyegg = bool.Parse(line);
+                                    break;
+                                case 18:
+                                    Globals.gerNames = bool.Parse(line);
+                                    break;
+                                case 19:
+                                    Globals.useincense = bool.Parse(line);
+                                    break;
+                                case 20:
+                                    Globals.ivmaxpercent = int.Parse(line);
+                                    break;
+                                case 21:
+                                    Globals.pokeList = bool.Parse(line);
+                                    break;
+                                case 22:
+                                    Globals.keepPokemonsThatCanEvolve = bool.Parse(line);
+                                    break;
+                                case 23:
+                                    Globals.pokevision = bool.Parse(line);
+                                    break;
+                                case 24:
+                                    Globals.useluckyegg = bool.Parse(line);
+                                    break;
+                                case 25:
+                                    Globals.autoIncubate = bool.Parse(line);
+                                    break;
+                                case 26:
+                                    Globals.useBasicIncubators = bool.Parse(line);
+                                    break;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            Logger.ColoredConsoleWrite(ConsoleColor.Red, $"Problem with value: {line} (line #{i})");
+                            throw;
+                        }
+                        i++;
+                    }
+                    if (cmdCoords != string.Empty)
+                    {
+                        string[] crdParts = cmdCoords.Split(',');
+                        Globals.latitute = double.Parse(crdParts[0].Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
+                        Globals.longitude = double.Parse(crdParts[1].Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
+                    }
+                    Logger.ColoredConsoleWrite(ConsoleColor.Yellow, $"Starting at: {Globals.latitute},{Globals.longitude}");
+                }
+
+                if (File.Exists(items))
+                {
+                    string[] lines = File.ReadAllLines(@items);
+                    i = 0;
+                    foreach (string line in lines)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                Globals.pokeball = int.Parse(line);
+                                break;
+                            case 1:
+                                Globals.greatball = int.Parse(line);
+                                break;
+                            case 2:
+                                Globals.ultraball = int.Parse(line);
+                                break;
+                            case 3:
+                                Globals.masterball = int.Parse(line);
+                                break;
+                            case 4:
+                                Globals.revive = int.Parse(line);
+                                break;
+                            case 5:
+                                Globals.toprevive = int.Parse(line);
+                                break;
+                            case 6:
+                                Globals.potion = int.Parse(line);
+                                break;
+                            case 7:
+                                Globals.superpotion = int.Parse(line);
+                                break;
+                            case 8:
+                                Globals.hyperpotion = int.Parse(line);
+                                break;
+                            case 9:
+                                Globals.toppotion = int.Parse(line);
+                                break;
+                            case 10:
+                                Globals.berry = int.Parse(line);
+                                break;
+                        }
+                        i++;
+                    }
+                }
+
+                if (File.Exists(keep))
+                {
+                    string[] lines = System.IO.File.ReadAllLines(@keep);
+                    foreach (string line in lines)
+                    {
+                        if (line != string.Empty)
+                            if (Globals.gerNames)
+                                Globals.noTransfer.Add((PokemonId)Enum.Parse(typeof(PokemonId), GUI.gerEng[line]));
+                            else
+                                Globals.noTransfer.Add((PokemonId)Enum.Parse(typeof(PokemonId), line));
+                    }
+                }
+
+                if (File.Exists(ignore))
+                {
+                    string[] lines = System.IO.File.ReadAllLines(@ignore);
+                    foreach (string line in lines)
+                    {
+                        if (line != string.Empty)
+                            if (Globals.gerNames)
+                                Globals.noCatch.Add((PokemonId)Enum.Parse(typeof(PokemonId), GUI.gerEng[line]));
+                            else
+                                Globals.noCatch.Add((PokemonId)Enum.Parse(typeof(PokemonId), line));
+                    }
+                }
+
+                if (File.Exists(evolve))
+                {
+                    string[] lines = System.IO.File.ReadAllLines(@evolve);
+                    foreach (string line in lines)
+                    {
+                        if (line != string.Empty)
+                            if (Globals.gerNames)
+                                Globals.doEvolve.Add((PokemonId)Enum.Parse(typeof(PokemonId), GUI.gerEng[line]));
+                            else
+                                Globals.doEvolve.Add((PokemonId)Enum.Parse(typeof(PokemonId), line));
+                    }
                 }
 
             }
             else
             {
-                System.Console.WriteLine("Couldn't check for Updates. Is Pastebin down?");
-            }
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new GUI());
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GUI());
-            Task.Run(() =>
-            {
-                Stats stats = new Stats();
-                stats.ShowDialog();
-            });
-
-            Logger.SetLogger(new Logging.ConsoleLogger(LogLevel.Info));
-
-            Mutex mutex = new Mutex(false, Globals.username);
-            try
-            {
-                if (mutex.WaitOne(0, false))
+                if (Globals.pokeList)
                 {
                     Task.Run(() =>
                     {
-                        try
-                        {
-                            new Logic.Logic(new Settings()).Execute().Wait();
-                        }
-                        catch (PtcOfflineException)
-                        {
-                            Logger.ColoredConsoleWrite(ConsoleColor.Red,
-                                "PTC Servers are probably down OR you credentials are wrong.", LogLevel.Error);
-                            Logger.ColoredConsoleWrite(ConsoleColor.Red, "Trying again in 20 seconds...");
-                            Thread.Sleep(20000);
-                            new Logic.Logic(new Settings()).Execute().Wait();
-                        }
-                        catch (AccountNotVerifiedException)
-                        {
-                            Logger.ColoredConsoleWrite(ConsoleColor.Red,
-                                "Your PTC Account is not activated. Exiting in 10 Seconds.");
-                            Thread.Sleep(10000);
-                            Environment.Exit(0);
-                        }
-
-                        catch (Exception ex)
-                        {
-                            Logger.ColoredConsoleWrite(ConsoleColor.Red, $"Unhandled exception: {ex}", LogLevel.Error);
-                            Logger.Error("Restarting in 20 Seconds.");
-                            Thread.Sleep(200000);
-                            new Logic.Logic(new Settings()).Execute().Wait();
-                        }
+                        Pokemons pokemonList = new Pokemons();
+                        pokemonList.ShowDialog();
                     });
-                    ReadCommands();
                 }
-                else
+            }
+
+            Logger.SetLogger(new Logging.ConsoleLogger(LogLevel.Info));
+
+            Globals.infoObservable.HandleNewHuntStats += SaveHuntStats;
+			Task.Run(() =>
+			{
+				Stats s = new Stats();
+				s.ShowDialog();
+			});
+			Task.Run(() =>
+            {
+				
+                try
                 {
-                    Logger.ColoredConsoleWrite(ConsoleColor.Red, "You already have an instance of this bot running with this account. Exiting in 10 seconds!", LogLevel.Error);
-                    Logger.ColoredConsoleWrite(ConsoleColor.Red, "Please close other instances and try again!", LogLevel.Error);
+                    new Logic.Logic(new Settings(), Globals.infoObservable).Execute().Wait();
+                }
+                catch (PtcOfflineException)
+                {
+                    Logger.ColoredConsoleWrite(ConsoleColor.Red, "PTC Servers are probably down OR you credentials are wrong.", LogLevel.Error);
+                    Logger.ColoredConsoleWrite(ConsoleColor.Red, "Trying again in 20 seconds...");
+                    Thread.Sleep(20000);
+                    new Logic.Logic(new Settings(), Globals.infoObservable).Execute().Wait();
+                }
+                catch (AccountNotVerifiedException)
+                {
+                    Logger.ColoredConsoleWrite(ConsoleColor.Red, "Your PTC Account is not activated. Exiting in 10 Seconds.");
                     Thread.Sleep(10000);
+                    Environment.Exit(0);
                 }
-            }
-            finally
-            {
-                mutex?.Close();
-            }
+                catch (Exception ex)
+                {
+                    Logger.ColoredConsoleWrite(ConsoleColor.Red, $"Unhandled exception: {ex}", LogLevel.Error);
+                    Logger.Error("Restarting in 20 Seconds.");
+                    Thread.Sleep(200000);
+                    new Logic.Logic(new Settings(), Globals.infoObservable).Execute().Wait();
+                }
+            });
+            System.Console.ReadLine();
         }
 
-        private static void ReadCommands()
+        private static void SaveHuntStats(string newHuntStat)
         {
-            while (true)
-            {
-                var input = System.Console.ReadLine();
-                if (input == "exit")
-                {
-                    Environment.Exit(1);
-                }
-
-                if (input == "GUI")
-                {
-                    if (Globals.pokeList)
-                    {
-                        Task.Run(() =>
-                        {
-                            PokemonList.ShowDialog();
-                        });
-                    }
-                    else
-                    {
-                        Task.Run(() =>
-                        {
-                            PokemonList = new Pokemons();
-                            PokemonList.ShowDialog();
-                        });
-                    }
-                }
-
-                if (input == "items")
-                {
-                    new Logic.Logic(new Settings()).ListItems();
-                }
-            }
+            File.AppendAllText(huntstats, newHuntStat);
         }
-
 
     }
     public static class Globals
     {
-		public static bool transferbyiv = false;
-		public static bool transferbycp = true;
-		public static Enums.AuthType acc = Enums.AuthType.Google;
+        public static Enums.AuthType acc = Enums.AuthType.Google;
         public static bool defLoc = true;
         public static string username = "empty";
         public static string password = "empty";
@@ -177,7 +340,6 @@ namespace PokemonGo.RocketAPI.Console
         public static double speed = 50;
         public static int radius = 5000;
         public static bool transfer = true;
-        public static bool transferUnwanted = true;
         public static int duplicate = 3;
         public static bool evolve = true;
         public static int maxCp = 999;
@@ -194,7 +356,7 @@ namespace PokemonGo.RocketAPI.Console
         public static int berry = 50;
         public static int ivmaxpercent = 0;
         public static List<PokemonId> noTransfer = new List<PokemonId>();
-        public static List<PokemonId> Unwanted = new List<PokemonId>();
+        public static List<PokemonId> noCatch = new List<PokemonId>();
         public static List<PokemonId> doEvolve = new List<PokemonId>();
         public static string telAPI = string.Empty;
         public static string telName = string.Empty;
@@ -207,5 +369,12 @@ namespace PokemonGo.RocketAPI.Console
         public static bool pokeList = true;
         public static bool keepPokemonsThatCanEvolve = true;
         public static bool pokevision = false;
+
+        public static bool useLuckyEggIfNotRunning = false;
+
+        public static bool autoIncubate = true;
+        public static bool useBasicIncubators = false;
+
+        public static Logic.LogicInfoObservable infoObservable = new Logic.LogicInfoObservable();
     }
 }

@@ -1,5 +1,6 @@
+using POGOProtos.Enums;
+using POGOProtos.Inventory.Item;
 using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.GeneratedCode;
 using System.Collections.Generic;
 
 namespace PokemonGo.RocketAPI
@@ -13,6 +14,8 @@ namespace PokemonGo.RocketAPI
         string GoogleRefreshToken { get; set; }
         string PtcPassword { get; }
         string PtcUsername { get; }
+        string GoogleUsername { get; }
+        string GooglePassword { get; }
 
         bool UseLastCords { get; }
 
@@ -36,20 +39,23 @@ namespace PokemonGo.RocketAPI
         int navigation_option { get; }
 
         bool UseLuckyEgg { get; }
+        bool UseLuckyEggIfNotRunning { get; }
         bool keepPokemonsThatCanEvolve { get; }
-        bool UserIncense { get; }
+        bool UseIncense { get; }
+
+        bool AutoIncubate { get; }
+        bool UseBasicIncubators { get; } 
 
         bool pokevision { get; }
 
         bool Language { get; }
 
-		bool transferCP { get; }
-		bool transferIV { get; }
-
-		ICollection<KeyValuePair<ItemId, int>> itemRecycleFilter { get; set; }
+        ICollection<KeyValuePair<ItemId, int>> itemRecycleFilter { get; set; }
 
         List<PokemonId> pokemonsToHold { get; set; }
         List<PokemonId> pokemonsToEvolve { get; set; }
-        List<PokemonId> unwantedPokemonList { get; }
+        List<PokemonId> catchPokemonSkipList { get; }
+
+
     }
 }

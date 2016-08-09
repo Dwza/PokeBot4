@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using PokemonGo.RocketAPI.Logic;
-using PokemonGo.RocketAPI.GeneratedCode;
-
+using POGOProtos.Inventory.Item;
 namespace PokemonGo.RocketAPI.Console
 {
 
@@ -48,28 +47,34 @@ namespace PokemonGo.RocketAPI.Console
 		{
 			while (true)
 			{
-				this.username.Text = "User: " + Vars.username;
-				this.xprate.Text = "XP/Hour: " + Vars.xprate;
-				this.catchrate.Text = "Pokemon/Hour: " + Vars.catchrate;
-				this.evolvecount.Text = "Pokemon to Evolve: " + Vars.evolvecount;
-				this.pokemon.Text = "Pokemon: " + Vars.pokemon;
-				this.items.Text = "Items: " + Vars.items;
-				this.stardust.Text = "Stardust: " + Vars.stardust;
-				this.progress.Text = Vars.level;
-				this.levelbar.Value = int.Parse(Vars.percentage);
-				await Task.Run(getItems);
+				if (Vars.update)
+				{
+					//broken rn
+					//await Task.Run(getItems);
+					this.username.Text = "User: " + Vars.username;
+					xprate.Text = "XP/Hour: " + Vars.xprate;
+					catchrate.Text = "Pokemon/Hour: " + Vars.catchrate;
+					evolvecount.Text = "Pokemon to Evolve: " + Vars.evolvecount;
+					pokemon.Text = "Pokemon: " + Vars.pokemon;
+					items.Text = "Items: " + Vars.items;
+					stardust.Text = "Stardust: " + Vars.stardust;
+					progress.Text = Vars.level;
+					levelbar.Value = int.Parse(Vars.percentage);
+					Vars.update = false;
+				}
+				
+				
 			}
 		}
 		async Task getItems()
 		{
-			await Task.Delay(7500);
-			var inventoryDump = await new Logic.Logic(new Settings())._inventory.GetItems();
+			var inventoryDump = await new Logic.Logic(new Settings(), new LogicInfoObservable())._client.Inventory.GetItems();
 			var inventory = inventoryDump.ToList();
 			foreach (var invItem in inventory)
 			{
 				if (invItem.Unseen == false)
 				{
-					switch ((ItemId)invItem.Item_)
+					switch (invItem.ItemId)
 					{
 						case ItemId.ItemPokeBall:
 							pokeballs.Text = invItem.Count + " PokeBalls";

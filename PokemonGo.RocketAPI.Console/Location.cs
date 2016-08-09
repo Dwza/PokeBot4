@@ -10,6 +10,8 @@ using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using GMap.NET;
 using System.Threading.Tasks;
+using System.Device.Location;
+using System.Globalization;
 
 namespace PokemonGo.RocketAPI.Console
 {
@@ -19,9 +21,51 @@ namespace PokemonGo.RocketAPI.Console
         public double alt;
         public bool close = true;
 
-        public LocationSelect()
+        public LocationSelect(bool asViewOnly)
         {
             InitializeComponent();
+            map.Manager.Mode = AccessMode.ServerOnly;
+
+            if (asViewOnly)
+                initViewOnly();
+        }
+
+        private void initViewOnly()
+        {
+            GMapOverlay markersOverlay = new GMapOverlay("markers");
+            //first hide all controls
+            foreach (Control c in Controls)
+                c.Visible = false;
+            //show map
+            map.Visible = true;
+            map.Dock = DockStyle.Fill;
+            //show geodata controls
+            label1.Visible = true;
+            label2.Visible = true;
+            textBox1.Visible = true;
+            textBox2.Visible = true;
+            //don't ask at closing
+            close = false;
+            //add & remove live data handler after form loaded
+            Globals.infoObservable.HandleNewGeoLocations += handleLiveGeoLocations;
+            this.FormClosing += (object s, FormClosingEventArgs e) =>
+            {
+                Globals.infoObservable.HandleNewGeoLocations -= handleLiveGeoLocations;
+            };
+        }
+
+        private void handleLiveGeoLocations(GeoCoordinate coords)
+        {
+            this.Invoke(new MethodInvoker(() =>
+            {
+                double lat = Convert.ToDouble(textBox1.Text);
+                double lon = Convert.ToDouble(textBox2.Text);
+                markersOverlay.Markers.Clear();
+                GMarkerGoogle marker = new GMarkerGoogle(new GMap.NET.PointLatLng(lat, lon), GMarkerGoogleType.red);
+                markersOverlay.Markers.Add(marker);
+                map.Overlays.Add(markersOverlay);
+                map.Position = new GMap.NET.PointLatLng(coords.Latitude, coords.Longitude);
+            }));
         }
 
         private void map_Load(object sender, EventArgs e)
@@ -54,10 +98,9 @@ namespace PokemonGo.RocketAPI.Console
         {
             Task.Run(() =>
             {
-                WebClient request = new WebClient();
-                ElevationRequest elevationRequest = new ElevationRequest()
+                var elevationRequest = new ElevationRequest()
                 {
-                    Locations = new Location[] { new Location(map.Position.Lat, map.Position.Lng) },
+                    Locations = new[] { new Location(map.Position.Lat, map.Position.Lng) },
                 };
                 try
                 {
@@ -70,13 +113,14 @@ namespace PokemonGo.RocketAPI.Console
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
+                    // ignored
                 }
             });
-            textBox1.Text = map.Position.Lat.ToString();
-            textBox2.Text = map.Position.Lng.ToString();
+
+            textBox1.Text = map.Position.Lat.ToString(CultureInfo.InvariantCulture);
+            textBox2.Text = map.Position.Lng.ToString(CultureInfo.InvariantCulture);
         }
 
         delegate void SetTextCallback(double cord);
@@ -85,12 +129,12 @@ namespace PokemonGo.RocketAPI.Console
         {
             if (this.textBox3.InvokeRequired)
             {
-                SetTextCallback d = new SetTextCallback(SetText);
-                this.Invoke(d, new object[] { cord });
+                SetTextCallback d = SetText;
+                this.Invoke(d, cord);
             }
             else
             {
-                this.textBox3.Text = cord.ToString();
+                this.textBox3.Text = cord.ToString(CultureInfo.InvariantCulture);
                 this.alt = cord;
             }
         }
@@ -153,6 +197,11 @@ namespace PokemonGo.RocketAPI.Console
                     textBox2.Text = "";
                 }
             }
+        }
+
+        private void LocationSelect_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

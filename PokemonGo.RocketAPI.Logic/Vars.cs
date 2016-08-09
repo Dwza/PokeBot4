@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokemonGo.RocketAPI
+namespace PokemonGo.RocketAPI.Logic
 {
 	public class Vars
 	{
+		public static bool update = false;
 		public static string username = "Unknown";
 		public static string xprate = "Unknown";
 		public static string catchrate = "Unknown";
