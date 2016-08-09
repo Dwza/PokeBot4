@@ -25,7 +25,7 @@
 ![img](http://i.imgur.com/WqgyLOf.png)
 
 ## Setup Guide
-- Download and extract the newest release [here](https://github.com/shiftcodeYT/PokeBot3/releases/latest)
+- Download and extract the newest release from [our forum](http://pokebot.pw)
 - Run the bot
 - Change everything to your liking and press save
 
