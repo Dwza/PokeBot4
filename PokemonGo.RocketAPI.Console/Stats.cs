@@ -62,6 +62,11 @@ namespace PokemonGo.RocketAPI.Console
 					levelbar.Value = int.Parse(Vars.percentage);
 					Vars.update = false;
 				}
+
+				else
+				{
+					await Task.Delay(5000);
+				}
 				
 				
 			}

@@ -113,6 +113,7 @@
 			this.checkBox7 = new System.Windows.Forms.CheckBox();
 			this.checkBox3 = new System.Windows.Forms.CheckBox();
 			this.pictureBox2 = new System.Windows.Forms.PictureBox();
+			this.label29 = new System.Windows.Forms.Label();
 			this.groupBox4.SuspendLayout();
 			this.groupBox7.SuspendLayout();
 			this.groupBox6.SuspendLayout();
@@ -970,12 +971,22 @@
 			this.pictureBox2.TabIndex = 37;
 			this.pictureBox2.TabStop = false;
 			// 
+			// label29
+			// 
+			this.label29.AutoSize = true;
+			this.label29.Location = new System.Drawing.Point(19, 630);
+			this.label29.Name = "label29";
+			this.label29.Size = new System.Drawing.Size(367, 13);
+			this.label29.TabIndex = 47;
+			this.label29.Text = "Attention! If you run into any issues regarding Memory, disable Pokemon List!";
+			// 
 			// GUI
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoScroll = true;
 			this.ClientSize = new System.Drawing.Size(752, 662);
+			this.Controls.Add(this.label29);
 			this.Controls.Add(this.groupBox4);
 			this.Controls.Add(this.groupBox7);
 			this.Controls.Add(this.groupBox6);
@@ -1103,6 +1114,7 @@
 		private System.Windows.Forms.CheckBox checkBox8;
 		private System.Windows.Forms.CheckBox checkBox7;
 		private System.Windows.Forms.CheckBox checkBox3;
+		private System.Windows.Forms.Label label29;
 	}
 }
 
