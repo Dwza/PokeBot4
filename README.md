@@ -1,6 +1,8 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/d820gn08fa3pwuih?svg=true)](https://ci.appveyor.com/project/shiftcodeYT/pokebot3)
 [![Stories Ready](https://badge.waffle.io/shiftcodeYT/PokeBot3.png?label=ready&title=Ready)](https://waffle.io/shiftcodeYT/PokeBot3)
 [![Stories in Progress](https://badge.waffle.io/shiftcodeYT/PokeBot3.png?label=in%20progress&title=In%20Progress)](https://waffle.io/shiftcodeYT/PokeBot3)
+
+
 # WE DID IT! Working now. Download [here](https://github.com/shiftcodeYT/PokeBot3/releases/latest)!
 
 # Pokemon Go Bot in CSharp
