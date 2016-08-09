@@ -1,4 +1,4 @@
-## Alright, GitHub Releases seems to fuck me over, i'll move my releases somewhere else. Stay tuned!
+## Releases moved to [our forum](http://pokebot.pw)! You have to register to download, but it's still free!
 # WE DID IT! Working now. Download [here](https://github.com/shiftcodeYT/PokeBot3/releases/latest)!
 
 # Pokemon Go Bot in CSharp
