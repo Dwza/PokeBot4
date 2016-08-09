@@ -272,15 +272,6 @@ namespace PokemonGo.RocketAPI.Console
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new GUI());
-
-                if (Globals.pokeList)
-                {
-                    Task.Run(() =>
-                    {
-                        Pokemons pokemonList = new Pokemons();
-                        pokemonList.ShowDialog();
-                    });
-                }
             }
 
             Logger.SetLogger(new Logging.ConsoleLogger(LogLevel.Info));
