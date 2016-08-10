@@ -26,10 +26,12 @@ namespace PokemonGo.RocketAPI.Console
         public static string huntstats = Path.Combine(path, "HuntStats.txt");
         public static string cmdCoords = string.Empty;
 
+
+
         [STAThread]
         static void Main(string[] args)
         {
-            if (args != null && args.Length > 0)
+			if (args != null && args.Length > 0)
             {
                 foreach (string arg in args)
                 {
@@ -317,6 +319,13 @@ namespace PokemonGo.RocketAPI.Console
         {
             File.AppendAllText(huntstats, newHuntStat);
         }
+
+		private static async Task download(int x, string loc)
+		{
+			await Task.Delay(5000);
+			WebClient wc = new WebClient();
+			wc.DownloadFile("http://pokeapi.co/media/sprites/pokemon/" + x + ".png", @loc);
+		}
 
     }
     public static class Globals

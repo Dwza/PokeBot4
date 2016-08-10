@@ -75,9 +75,9 @@ namespace PokemonGo.RocketAPI.Logic
                             Logger.ColoredConsoleWrite(ConsoleColor.Green, "Telegram Name: " + me.Username);
                             _telegram.getClient().StartReceiving();
                         }
-                        catch (Exception)
+                        catch (Exception e)
                         {
-
+							Logger.ColoredConsoleWrite(ConsoleColor.Red, "Telegram Error: " + e.StackTrace);
                         }
                     }
 

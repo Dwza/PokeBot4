@@ -366,35 +366,47 @@ namespace PokemonGo.RocketAPI.Logic.Utils
                                 }
                                 break;
                             }
-                            else { 
+                            else {
+								bool done = false;
                                 foreach (TelegramUtilInformationTopics topic in topics)
                                 {
-                                    String niceName = topic.ToString().Substring(0, 1).ToUpper() + topic.ToString().Substring(1).ToLower();
-                                    telegramAnswer = (_information[topic] ? "Dis" : "En") + "abled information topic " + niceName + "\n";
-                                    _information[topic] = !_information[topic];
-                                    break;
+									if(textCMD[1].ToLower() == topic.ToString().ToLower())
+									{
+										String niceName = topic.ToString().Substring(0, 1).ToUpper() + topic.ToString().Substring(1).ToLower();
+										telegramAnswer = (_information[topic] ? "Dis" : "En") + "abled information topic " + niceName + "\n";
+										_information[topic] = !_information[topic];
+										done = true;
+									}
                                 }
+								if (!done)
+								{
+									foreach (TelegramUtilInformationTopics topic in topics)
+									{
+										String niceName = topic.ToString().ToLower();
+										telegramAnswer += "/information " + niceName + "\n";
+										telegramAnswer += "Currently " + (_information[topic] ? "enabled" : "disabled") + "\n";
+										//telegramAnswer += "\n";
+									}
+									telegramAnswer += "\n";
+									telegramAnswer += "/information all-disable\n";
+									telegramAnswer += "/information all-enable\n";
+									break;
+								}
                             }
                         }
                         else
                         {
-                            foreach (TelegramUtilInformationTopics topic in topics)
-                            {
-                                String niceName = topic.ToString().Substring(0, 1).ToUpper() + topic.ToString().Substring(1).ToLower();
-                                telegramAnswer += " - " + niceName + "\n";
-                                telegramAnswer += " -     " + _informationDescription[topic] + "\n";
-                                telegramAnswer += " -     Currently " + (_information[topic] ? "enabled" : "disabled") + "\n";
-                                telegramAnswer += "\n";
-                            }
-
-                            telegramAnswer += " - all-disable\n";
-                            telegramAnswer += " -     " + TranslationHandler.GetString("telegram-disable-all", "Disable all topics") + "\n";
-                            telegramAnswer += "\n";
-
-                            telegramAnswer += " - all-enable\n";
-                            telegramAnswer += " -     " + TranslationHandler.GetString("telegram-enable-all", "Enable all topics") + "\n";
-                            telegramAnswer += "\n";
-                            break;
+							foreach (TelegramUtilInformationTopics topic in topics)
+							{
+								String niceName = topic.ToString().ToLower();
+								telegramAnswer += "/information " + niceName + "\n";
+								telegramAnswer += "Currently " + (_information[topic] ? "enabled" : "disabled") + "\n";
+								//telegramAnswer += "\n";
+							}
+							telegramAnswer += "\n";
+							telegramAnswer += "/information all-disable\n";
+							telegramAnswer += "/information all-enable\n";
+							break;
                         }
 
                         break;
