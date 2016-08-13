@@ -72,6 +72,14 @@ namespace PokemonGo.RocketAPI.Console
 
         private void GUI_Load(object sender, EventArgs e)
         {
+
+            /*
+             * CultureInfo ci = CultureInfo.CurrentUICulture;
+             * ci.Name // en-US, de-DE etc.
+             * 
+             * Autochoose language
+             */ 
+
             // Create missing Files
             Directory.CreateDirectory(Program.path);
             Directory.CreateDirectory(Program.path_translation);
@@ -235,6 +243,17 @@ namespace PokemonGo.RocketAPI.Console
                             break;
                         case 26:
                             chkUseBasicIncubators.Checked = bool.Parse(line);
+                            break;
+                        case 27:
+                            if(line == "Google")
+                            {
+                                rdoGMap.Checked = true;
+                            }
+                            else
+                            {
+                                rdoBMap.Checked = true;
+                            }
+                            Globals.mapType = line;
                             break;
                         default:
                             TextBox temp = (TextBox)Controls.Find("textBox" + tb, true).FirstOrDefault();
@@ -468,6 +487,14 @@ namespace PokemonGo.RocketAPI.Console
             Globals.defLoc = checkBox1.Checked;
             Globals.evolve = checkBox3.Checked;
 
+            //MapTypSelection
+            Globals.mapType = "Bing";
+
+            if (rdoGMap.Checked)
+            {
+                Globals.mapType = "Google";
+            }
+
             if (textBox10.Text == string.Empty)
             {
                 textBox10.BackColor = Color.Red;
@@ -637,7 +664,8 @@ namespace PokemonGo.RocketAPI.Console
                     Globals.keepPokemonsThatCanEvolve.ToString(),
                     Globals.useLuckyEggIfNotRunning.ToString(),
                     Globals.autoIncubate.ToString(),
-                    Globals.useBasicIncubators.ToString()
+                    Globals.useBasicIncubators.ToString(),
+                    Globals.mapType.ToString()
             };
             File.WriteAllLines(@Program.account, accFile);
 

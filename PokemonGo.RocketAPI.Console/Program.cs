@@ -375,6 +375,8 @@ namespace PokemonGo.RocketAPI.Console
         public static bool autoIncubate = true;
         public static bool useBasicIncubators = false;
 
+        public static string mapType = "Bing";
+
         public static Logic.LogicInfoObservable infoObservable = new Logic.LogicInfoObservable();
     }
 }
