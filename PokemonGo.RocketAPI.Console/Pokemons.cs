@@ -188,7 +188,10 @@ namespace PokemonGo.RocketAPI.Console
 
                     PokemonListView.Items.Add(listViewItem);
                 }
+
                 PokemonListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                PokemonListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
                 Text = "Pokemon List | User: " + profile.PlayerData.Username + " | Pokemons: " + pokemons.Count() + "/" + profile.PlayerData.MaxPokemonStorage;
                 EnabledButton(true);
 
