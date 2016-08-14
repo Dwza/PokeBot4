@@ -78,7 +78,23 @@ namespace PokemonGo.RocketAPI.Console
             try
             {
                 map.DragButton = MouseButtons.Left;
-                map.MapProvider = GMapProviders.BingMap;
+
+                switch (Globals.mapType)
+                {
+                    case "Bing":
+                        map.MapProvider = GMapProviders.BingMap;
+                        break;
+
+                    case "Google":
+                        map.MapProvider = GMapProviders.GoogleMap;
+                        break;
+
+                    default:
+                        map.MapProvider = GMapProviders.BingMap;
+                        break;
+                }
+
+                
                 map.Position = new GMap.NET.PointLatLng(Globals.latitute, Globals.longitude);
                 map.MinZoom = 0;
                 map.MaxZoom = 20;
@@ -201,7 +217,7 @@ namespace PokemonGo.RocketAPI.Console
 
         private void LocationSelect_Load(object sender, EventArgs e)
         {
-
+            //pokestop positions here
         }
     }
 }

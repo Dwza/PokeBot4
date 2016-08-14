@@ -27,7 +27,8 @@ namespace PokemonGo.RocketAPI.Console
 
 		bool list = false;
 		Pokemons pokemonList = new Pokemons();
-		public Stats()
+
+        public Stats()
 		{
 			InitializeComponent();
 			Task.Run(update);
@@ -127,6 +128,7 @@ namespace PokemonGo.RocketAPI.Console
 				}
 			}
 		}
+
 		private void togglelist_Click(object sender, EventArgs e)
 		{
 			if (list)
