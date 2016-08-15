@@ -973,6 +973,29 @@ namespace PokemonGo.RocketAPI.Console
                 return objWebRequest;
             }
         }
-         
-    }
+
+		private void rdoGMap_CheckedChanged(object sender, EventArgs e)
+		{
+			RadioButton rb = sender as RadioButton;
+			if (rb != null)
+			{
+				if (rb.Checked)
+				{
+					Globals.mapType = "Google";
+				}
+			}
+		}
+
+		private void rdoBMap_CheckedChanged(object sender, EventArgs e)
+		{
+			RadioButton rb = sender as RadioButton;
+			if (rb != null)
+			{
+				if (rb.Checked)
+				{
+					Globals.mapType = "Bing";
+				}
+			}
+		}
+	}
 }
