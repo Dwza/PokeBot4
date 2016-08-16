@@ -1,15 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using PokemonGo.RocketAPI.Exceptions;
-using System.Reflection;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Collections.Generic; 
 using System.IO;
 using PokemonGo.RocketAPI.Logic.Utils;
 using POGOProtos.Enums;
+using Newtonsoft.Json.Linq;
 
 namespace PokemonGo.RocketAPI.Console
 {
@@ -28,253 +27,29 @@ namespace PokemonGo.RocketAPI.Console
 
 
 
-        [STAThread]
-        static void Main(string[] args)
-        {
-			if (args != null && args.Length > 0)
-            {
-                foreach (string arg in args)
-                {
-                    if (arg.Contains(","))
-                    {
-                        Logger.ColoredConsoleWrite(ConsoleColor.Green, $"Found coordinates in command line: {arg}");
-                        if (File.Exists(lastcords))
-                        {
-                            Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Last coords file exists, trying to delete it");
-                            File.Delete(lastcords);
-                        }
+		[STAThread]
+		static void Main(string[] args)
+		{
+			if(Globals.licensekey != "None")
+			{
+				JObject license = JObject.Parse(Auth.auth(Globals.licensekey));
+				System.Console.WriteLine("-----License Info-----");
+				System.Console.WriteLine("Key: " + license["key"]);
+				System.Console.WriteLine("ID: " + license["purchase_id"]);
+				System.Console.WriteLine("Rank: " + license["purchase_name"]);
+				System.Console.WriteLine("Licensed to: " + license["customer_name"]);
+				System.Console.WriteLine("-----License Info-----");
+			}
 
-                        cmdCoords = arg;
-                    }
-                }
-            }
+			
 
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
 
-            if (args != null && args.Length > 0 && args[0].Contains("-nogui"))
-            {
-                Logger.ColoredConsoleWrite(ConsoleColor.Red, "You added -nogui! If you didnt setup correctly with the GUI. It wont work.");
-                foreach (PokemonId pokemon in Enum.GetValues(typeof(PokemonId)))
-                {
-                    if (pokemon.ToString() != "Missingno")
-                    {
-                        GUI.gerEng[StringUtils.getPokemonNameGer(pokemon)] = pokemon.ToString();
-                    }
-                }
-                int i = 0;
-                if (File.Exists(account))
-                {
-                    string[] lines = File.ReadAllLines(@account);
-                    foreach (string line in lines)
-                    {
-                        try
-                        {
-                            switch (i)
-                            {
-                                case 0:
-                                    if (line == "Google")
-                                        Globals.acc = Enums.AuthType.Google;
-                                    else
-                                        Globals.acc = Enums.AuthType.Ptc;
-                                    break;
-                                case 1:
-                                    Globals.username = line;
-                                    break;
-                                case 2:
-                                    Globals.password = line;
-                                    break;
-                                case 3:
-                                    if (line.Split('.').Length - 1 > 1)
-                                    { // Coords in one line, comma-delimited.
-                                        string[] crdParts = line.Split(',');
-                                        Globals.latitute = double.Parse(crdParts[0].Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
-                                        Globals.longitude = double.Parse(crdParts[1].Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
-                                        i++;
-                                    }
-                                    else
-                                    {
-                                        Globals.latitute = double.Parse(line.Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
-                                    }
-                                    break;
-                                case 4:
-                                    Globals.longitude = double.Parse(line.Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
-                                    break;
-                                case 5:
-                                    Globals.altitude = double.Parse(line.Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
-                                    break;
-                                case 6:
-                                    Globals.speed = double.Parse(line.Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
-                                    break;
-                                case 7:
-                                    Globals.radius = int.Parse(line);
-                                    break;
-                                case 8:
-                                    Globals.defLoc = bool.Parse(line);
-                                    break;
-                                case 9:
-                                    Globals.transfer = bool.Parse(line);
-                                    break;
-                                case 10:
-                                    Globals.duplicate = int.Parse(line);
-                                    break;
-                                case 11:
-                                    Globals.evolve = bool.Parse(line);
-                                    break;
-                                case 12:
-                                    Globals.maxCp = int.Parse(line);
-                                    break;
-                                case 13:
-                                    Globals.telAPI = line;
-                                    break;
-                                case 14:
-                                    Globals.telName = line;
-                                    break;
-                                case 15:
-                                    Globals.telDelay = int.Parse(line);
-                                    break;
-                                case 16:
-                                    //Globals.telDelay = int.Parse(line);
-                                    // NavigationOption...
-                                    break;
-                                case 17:
-                                    Globals.useluckyegg = bool.Parse(line);
-                                    break;
-                                case 18:
-                                    Globals.gerNames = bool.Parse(line);
-                                    break;
-                                case 19:
-                                    Globals.useincense = bool.Parse(line);
-                                    break;
-                                case 20:
-                                    Globals.ivmaxpercent = int.Parse(line);
-                                    break;
-                                case 21:
-                                    Globals.pokeList = bool.Parse(line);
-                                    break;
-                                case 22:
-                                    Globals.keepPokemonsThatCanEvolve = bool.Parse(line);
-                                    break;
-                                case 23:
-                                    Globals.pokevision = bool.Parse(line);
-                                    break;
-                                case 24:
-                                    Globals.useluckyegg = bool.Parse(line);
-                                    break;
-                                case 25:
-                                    Globals.autoIncubate = bool.Parse(line);
-                                    break;
-                                case 26:
-                                    Globals.useBasicIncubators = bool.Parse(line);
-                                    break;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            Logger.ColoredConsoleWrite(ConsoleColor.Red, $"Problem with value: {line} (line #{i})");
-                            throw;
-                        }
-                        i++;
-                    }
-                    if (cmdCoords != string.Empty)
-                    {
-                        string[] crdParts = cmdCoords.Split(',');
-                        Globals.latitute = double.Parse(crdParts[0].Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
-                        Globals.longitude = double.Parse(crdParts[1].Replace(',', '.'), GUI.cords, System.Globalization.NumberFormatInfo.InvariantInfo);
-                    }
-                    Logger.ColoredConsoleWrite(ConsoleColor.Yellow, $"Starting at: {Globals.latitute},{Globals.longitude}");
-                }
+			License l = new License();
+			l.ShowDialog();
 
-                if (File.Exists(items))
-                {
-                    string[] lines = File.ReadAllLines(@items);
-                    i = 0;
-                    foreach (string line in lines)
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                Globals.pokeball = int.Parse(line);
-                                break;
-                            case 1:
-                                Globals.greatball = int.Parse(line);
-                                break;
-                            case 2:
-                                Globals.ultraball = int.Parse(line);
-                                break;
-                            case 3:
-                                Globals.masterball = int.Parse(line);
-                                break;
-                            case 4:
-                                Globals.revive = int.Parse(line);
-                                break;
-                            case 5:
-                                Globals.toprevive = int.Parse(line);
-                                break;
-                            case 6:
-                                Globals.potion = int.Parse(line);
-                                break;
-                            case 7:
-                                Globals.superpotion = int.Parse(line);
-                                break;
-                            case 8:
-                                Globals.hyperpotion = int.Parse(line);
-                                break;
-                            case 9:
-                                Globals.toppotion = int.Parse(line);
-                                break;
-                            case 10:
-                                Globals.berry = int.Parse(line);
-                                break;
-                        }
-                        i++;
-                    }
-                }
-
-                if (File.Exists(keep))
-                {
-                    string[] lines = System.IO.File.ReadAllLines(@keep);
-                    foreach (string line in lines)
-                    {
-                        if (line != string.Empty)
-                            if (Globals.gerNames)
-                                Globals.noTransfer.Add((PokemonId)Enum.Parse(typeof(PokemonId), GUI.gerEng[line]));
-                            else
-                                Globals.noTransfer.Add((PokemonId)Enum.Parse(typeof(PokemonId), line));
-                    }
-                }
-
-                if (File.Exists(ignore))
-                {
-                    string[] lines = System.IO.File.ReadAllLines(@ignore);
-                    foreach (string line in lines)
-                    {
-                        if (line != string.Empty)
-                            if (Globals.gerNames)
-                                Globals.noCatch.Add((PokemonId)Enum.Parse(typeof(PokemonId), GUI.gerEng[line]));
-                            else
-                                Globals.noCatch.Add((PokemonId)Enum.Parse(typeof(PokemonId), line));
-                    }
-                }
-
-                if (File.Exists(evolve))
-                {
-                    string[] lines = System.IO.File.ReadAllLines(@evolve);
-                    foreach (string line in lines)
-                    {
-                        if (line != string.Empty)
-                            if (Globals.gerNames)
-                                Globals.doEvolve.Add((PokemonId)Enum.Parse(typeof(PokemonId), GUI.gerEng[line]));
-                            else
-                                Globals.doEvolve.Add((PokemonId)Enum.Parse(typeof(PokemonId), line));
-                    }
-                }
-
-            }
-            else
-            {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new GUI());
-            }
+			Application.Run(new GUI());
 
             Logger.SetLogger(new Logging.ConsoleLogger(LogLevel.Info));
 
@@ -330,6 +105,7 @@ namespace PokemonGo.RocketAPI.Console
     }
     public static class Globals
     {
+		public static string licensekey = "None";
         public static Enums.AuthType acc = Enums.AuthType.Google;
         public static bool defLoc = true;
         public static string username = "empty";
