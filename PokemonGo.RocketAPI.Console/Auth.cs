@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -23,6 +24,42 @@ namespace PokemonGo.RocketAPI.Console
 					response = "{\"errorCode\":\"BAD_KEY_OR_ID\",\"errorMessage\":101}";
 				}
 				return response;
+			}
+		}
+		public static bool valid(string key)
+		{
+			JObject license = JObject.Parse(auth(key));
+			if (license["key"] != null)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		public static string user(string key)
+		{
+			JObject license = JObject.Parse(auth(key));
+			if (license["key"] != null)
+			{
+				return license["customer_name"] + "";
+			}
+			else
+			{
+				return "Everyone";
+			}
+		}
+		public static string rank(string key)
+		{
+			JObject license = JObject.Parse(auth(key));
+			if (license["key"] != null)
+			{
+				return license["purchase_name"] + "";
+			}
+			else
+			{
+				return "";
 			}
 		}
 	}

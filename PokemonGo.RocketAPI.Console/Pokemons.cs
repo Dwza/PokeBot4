@@ -13,7 +13,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static PokemonGo.RocketAPI.Console.GUI;
+using static PokemonGo.RocketAPI.Console.Config;
 using PokemonGo.RocketAPI.Logic.Utils;
 
 namespace PokemonGo.RocketAPI.Console

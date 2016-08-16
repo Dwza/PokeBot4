@@ -4,18 +4,29 @@ using PokemonGo.RocketAPI.Exceptions;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using System.IO;
 using PokemonGo.RocketAPI.Logic.Utils;
 using POGOProtos.Enums;
 using Newtonsoft.Json.Linq;
+using System.Runtime.InteropServices;
 
 namespace PokemonGo.RocketAPI.Console
 {
     internal class Program
     {
-        public static string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configs");
-        public static string path_translation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Translations");
+		[DllImport("kernel32.dll")]
+		static extern IntPtr GetConsoleWindow();
+
+		[DllImport("user32.dll")]
+		static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+		const int SW_HIDE = 0;
+		const int SW_SHOW = 5;
+
+
+		public static string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "pokebot4");
+        public static string path_translation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "pokebot4_translations");
         public static string account = Path.Combine(path, "Config.txt");
         public static string items = Path.Combine(path, "Items.txt");
         public static string keep = Path.Combine(path, "noTransfer.txt");
@@ -23,6 +34,7 @@ namespace PokemonGo.RocketAPI.Console
         public static string evolve = Path.Combine(path, "Evolve.txt");
         public static string lastcords = Path.Combine(path, "LastCoords.txt");
         public static string huntstats = Path.Combine(path, "HuntStats.txt");
+		public static string license = Path.Combine(path, "license.txt");
         public static string cmdCoords = string.Empty;
 
 
@@ -30,63 +42,83 @@ namespace PokemonGo.RocketAPI.Console
 		[STAThread]
 		static void Main(string[] args)
 		{
-			if(Globals.licensekey != "None")
-			{
-				JObject license = JObject.Parse(Auth.auth(Globals.licensekey));
-				System.Console.WriteLine("-----License Info-----");
-				System.Console.WriteLine("Key: " + license["key"]);
-				System.Console.WriteLine("ID: " + license["purchase_id"]);
-				System.Console.WriteLine("Rank: " + license["purchase_name"]);
-				System.Console.WriteLine("Licensed to: " + license["customer_name"]);
-				System.Console.WriteLine("-----License Info-----");
-			}
 
-			
+
+			var handle = GetConsoleWindow();
+			ShowWindow(handle, SW_HIDE);
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			License l = new License();
-			l.ShowDialog();
+			
 
-			Application.Run(new GUI());
+
+			if (File.Exists(license))
+			{
+				if (Auth.valid(File.ReadAllText(license)))
+				{
+					Globals.licensekey = File.ReadAllText(license);
+					Globals.licensed = true;
+				}
+
+				else
+				{
+					Globals.licensed = false;
+					License l = new License();
+					l.ShowDialog();
+				}
+				
+			}
+
+			else
+			{
+				License l = new License();
+				l.ShowDialog();
+				if(Globals.licensed == true)
+				{
+					File.WriteAllText(license, Globals.licensekey);
+				}
+			}
+
+
+
+			Application.Run(new Config());
 
             Logger.SetLogger(new Logging.ConsoleLogger(LogLevel.Info));
 
             Globals.infoObservable.HandleNewHuntStats += SaveHuntStats;
 			Task.Run(() =>
 			{
-				Stats s = new Stats();
+				GUI s = new GUI();
 				s.ShowDialog();
 			});
-			Task.Run(() =>
-            {
-				
-                try
-                {
-                    new Logic.Logic(new Settings(), Globals.infoObservable).Execute().Wait();
-                }
-                catch (PtcOfflineException)
-                {
-                    Logger.ColoredConsoleWrite(ConsoleColor.Red, "PTC Servers are probably down OR you credentials are wrong.", LogLevel.Error);
-                    Logger.ColoredConsoleWrite(ConsoleColor.Red, "Trying again in 20 seconds...");
-                    Thread.Sleep(20000);
-                    new Logic.Logic(new Settings(), Globals.infoObservable).Execute().Wait();
-                }
-                catch (AccountNotVerifiedException)
-                {
-                    Logger.ColoredConsoleWrite(ConsoleColor.Red, "Your PTC Account is not activated. Exiting in 10 Seconds.");
-                    Thread.Sleep(10000);
-                    Environment.Exit(0);
-                }
-                catch (Exception ex)
-                {
-                    Logger.ColoredConsoleWrite(ConsoleColor.Red, $"Unhandled exception: {ex}", LogLevel.Error);
-                    Logger.Error("Restarting in 20 Seconds.");
-                    Thread.Sleep(200000);
-                    new Logic.Logic(new Settings(), Globals.infoObservable).Execute().Wait();
-                }
-            });
+			Task.Run(async () =>
+			{
+				while (true)
+				{
+					try
+					{
+						await trylogic();
+					}
+					catch (PtcOfflineException)
+					{
+						MessageBox.Show("PTC Servers are probably down OR you credentials are wrong. Press OK to try again!", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+						Logger.ColoredConsoleWrite(ConsoleColor.Red, "PTC Servers are probably down OR you credentials are wrong.", LogLevel.Error);
+					}
+					catch (AccountNotVerifiedException)
+					{
+						MessageBox.Show("Your PTC accoutn is not verified. Press OK to exit!", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+						Logger.ColoredConsoleWrite(ConsoleColor.Red, "Your PTC Account is not activated. Exiting in 10 Seconds.");
+						Environment.Exit(0);
+					}
+					catch (Exception ex)
+					{
+						Logger.ColoredConsoleWrite(ConsoleColor.Red, $"Unhandled exception: {ex}", LogLevel.Error);
+						Logger.Error("Restarting in 20 Seconds.");
+					}
+				}
+
+			});
             System.Console.ReadLine();
         }
 
@@ -102,10 +134,15 @@ namespace PokemonGo.RocketAPI.Console
 			wc.DownloadFile("http://pokeapi.co/media/sprites/pokemon/" + x + ".png", @loc);
 		}
 
+		public static async Task trylogic()
+		{
+			new Logic.Logic(new Settings(), Globals.infoObservable).Execute().Wait();
+		}
     }
     public static class Globals
     {
-		public static string licensekey = "None";
+		public static string licensekey = "Free";
+		public static bool licensed = false;
         public static Enums.AuthType acc = Enums.AuthType.Google;
         public static bool defLoc = true;
         public static string username = "empty";

@@ -6,6 +6,16 @@ namespace PokemonGo.RocketAPI.Console
 {
 	public partial class License : Form
 	{
+		private const int CP_NOCLOSE_BUTTON = 0x200;
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams myCp = base.CreateParams;
+				myCp.ClassStyle = myCp.ClassStyle | CP_NOCLOSE_BUTTON;
+				return myCp;
+			}
+		}
 		public License()
 		{
 			InitializeComponent();
@@ -21,13 +31,8 @@ namespace PokemonGo.RocketAPI.Console
 			else
 			{
 				MessageBox.Show(this, "License for User " + license["customer_name"] + " was successfully activated. Enjoy your features!", "Activation", MessageBoxButtons.OK, MessageBoxIcon.Information);
-				System.Console.WriteLine("-----License Info-----");
-				System.Console.WriteLine("Key: " + license["key"]);
-				System.Console.WriteLine("ID: " + license["purchase_id"]);
-				System.Console.WriteLine("Rank: " + license["purchase_name"]);
-				System.Console.WriteLine("Licensed to: " + license["customer_name"]);
-				System.Console.WriteLine("-----License Info-----");
 				Globals.licensekey = textBox1.Text;
+				Globals.licensed = true;
 				this.Dispose();
 			}
 			
@@ -36,6 +41,7 @@ namespace PokemonGo.RocketAPI.Console
 		private void button2_Click(object sender, EventArgs e)
 		{
 			Globals.licensekey = "Free";
+			Globals.licensed = false;
 			this.Dispose();
 		}
 	}
