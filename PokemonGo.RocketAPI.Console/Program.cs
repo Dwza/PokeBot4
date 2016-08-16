@@ -26,7 +26,7 @@ namespace PokemonGo.RocketAPI.Console
 
 
 		public static string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "pokebot4");
-        public static string path_translation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "pokebot4_translations");
+        public static string path_translation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Translations");
         public static string account = Path.Combine(path, "Config.txt");
         public static string items = Path.Combine(path, "Items.txt");
         public static string keep = Path.Combine(path, "noTransfer.txt");
@@ -74,10 +74,6 @@ namespace PokemonGo.RocketAPI.Console
 			{
 				License l = new License();
 				l.ShowDialog();
-				if(Globals.licensed == true)
-				{
-					File.WriteAllText(license, Globals.licensekey);
-				}
 			}
 
 

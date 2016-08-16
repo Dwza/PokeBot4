@@ -265,22 +265,21 @@
 			// 
 			// metroButton2
 			// 
-			this.metroButton2.Location = new System.Drawing.Point(184, 21);
+			this.metroButton2.Location = new System.Drawing.Point(208, 21);
 			this.metroButton2.Name = "metroButton2";
-			this.metroButton2.Size = new System.Drawing.Size(121, 23);
+			this.metroButton2.Size = new System.Drawing.Size(97, 23);
 			this.metroButton2.TabIndex = 1;
-			this.metroButton2.Text = "Show/Hide PokeList";
+			this.metroButton2.Text = "Toggle PokeList";
 			this.metroButton2.UseSelectable = true;
 			this.metroButton2.Click += new System.EventHandler(this.togglelist_Click);
 			// 
 			// metroButton1
 			// 
-			this.metroButton1.Enabled = false;
 			this.metroButton1.Location = new System.Drawing.Point(7, 21);
 			this.metroButton1.Name = "metroButton1";
-			this.metroButton1.Size = new System.Drawing.Size(123, 23);
+			this.metroButton1.Size = new System.Drawing.Size(132, 23);
 			this.metroButton1.TabIndex = 0;
-			this.metroButton1.Text = "Show/Hide Console";
+			this.metroButton1.Text = "Toggle Log (for errors)";
 			this.metroButton1.UseSelectable = true;
 			this.metroButton1.Click += new System.EventHandler(this.toggleconsole_Click);
 			// 

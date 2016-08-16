@@ -112,6 +112,7 @@ namespace PokemonGo.RocketAPI.Logic
 
         public async Task PostLoginExecute()
         {
+			await Task.Delay(5000);
             while (true)
             {
                 try
@@ -140,12 +141,18 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     throw;
                 }
-                catch (Exception ex)
+				catch (NullReferenceException ex)
+				{
+					Logger.Write($"Exception: {ex}", LogLevel.Error);
+					System.Windows.Forms.MessageBox.Show("You account is probably banned. Try to login on your phone. Press OK to try again!");
+				}
+				catch (Exception ex)
                 {
-                    Logger.Write($"Exception: {ex}", LogLevel.Error);
-                }
+					Logger.Write($"Exception: {ex}", LogLevel.Error);
+					await Task.Delay(10000);
+				}
                 Logger.ColoredConsoleWrite(ConsoleColor.Green, "Starting again in 10 seconds...");
-                await Task.Delay(10000);
+                
             }
         }
 

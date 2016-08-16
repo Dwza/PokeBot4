@@ -105,8 +105,11 @@ namespace PokemonGo.RocketAPI.Console
             // Create missing Files
             Directory.CreateDirectory(Program.path);
             Directory.CreateDirectory(Program.path_translation);
-
-            try
+			if (Globals.licensed == true)
+			{
+				File.WriteAllText(Program.license, Globals.licensekey);
+			}
+			try
             {
                 Extract("PokemonGo.RocketAPI.Console", AppDomain.CurrentDomain.BaseDirectory, "Resources", "encrypt.dll"); // unpack our encrypt dll
             } catch (Exception)
@@ -214,13 +217,35 @@ namespace PokemonGo.RocketAPI.Console
                             else
                                 comboBox1.SelectedIndex = 1;
                             break;
-                        case 9:
+						case 2:
+							textBox1.Text = line;
+							break;
+						case 3:
+							textBox2.Text = line;
+							break;
+						case 4:
+							textBox3.Text = line;
+							break;
+						case 5:
+							textBox4.Text = line;
+							break;
+						case 6:
+							textBox5.Text = line;
+							break;
+						case 9:
                             
                             break;
                         case 10:
                             checkBox2.Checked = bool.Parse(line);
                             break;
-                        case 12:
+						case 11:
+							textBox8.Text = line;
+							break;
+
+						case 13:
+							textBox9.Text = line;
+							break;
+						case 12:
                             checkBox3.Checked = bool.Parse(line);
                             break;
                         case 14:

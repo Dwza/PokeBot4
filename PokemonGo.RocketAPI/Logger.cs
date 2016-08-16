@@ -11,8 +11,8 @@ namespace PokemonGo.RocketAPI
 	
 	public static class Logger
 	{
-        public static string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configs");
-        public static string log = Path.Combine(path, "log.txt");
+		public static string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "pokebot4");
+		public static string log = Path.Combine(path, "log.txt");
         private static ILogger logger;
 
 		/// <summary>
