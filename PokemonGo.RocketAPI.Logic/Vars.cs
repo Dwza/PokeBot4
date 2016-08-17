@@ -19,4 +19,9 @@ namespace PokemonGo.RocketAPI.Logic
 		public static string level = "Unknown";
 		public static string percentage = "0";
 	}
+	public class TaskVars
+	{
+		public static string task = "";
+		//Tasks: farm, transfer, evolve, discard, catch, move
+	}
 }

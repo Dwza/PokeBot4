@@ -77,15 +77,22 @@ namespace PokemonGo.RocketAPI.Logic
                         }
                         catch (Exception e)
                         {
+							System.Windows.Forms.MessageBox.Show("Unable to communicate with Telegram. Press OK to continue!", "Telegram Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
 							Logger.ColoredConsoleWrite(ConsoleColor.Red, "Telegram Error: " + e.StackTrace);
                         }
                     }
 
                     await PostLoginExecute();
-                } 
-                catch (Exception ex)
+                }
+				catch (LoginFailedException)
+				{
+					System.Windows.Forms.MessageBox.Show("Username or password invalid, press OK to exit", "Login failed", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+					System.Environment.Exit(0);
+				}
+				catch (Exception ex)
                 {
-                    Logger.Error($"Error: " + ex.Source);
+					System.Windows.Forms.MessageBox.Show("An error has occoured. Press OK to restart!", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+					Logger.Error($"Error: " + ex.Source);
                     Logger.Error($"{ex}"); 
                     Logger.ColoredConsoleWrite(ConsoleColor.Green, "Trying to Restart."); 
                     try
@@ -98,13 +105,14 @@ namespace PokemonGo.RocketAPI.Logic
                     } 
                 }
 
-                Logger.ColoredConsoleWrite(ConsoleColor.Red, "Restarting in 10 Seconds."); 
-                await Task.Delay(10000);
+                Logger.ColoredConsoleWrite(ConsoleColor.Red, "Restarting in 2 Seconds."); 
+                await Task.Delay(2000);
             }
         }
 
         public async Task PostLoginExecute()
         {
+			await Task.Delay(5000);
             while (true)
             {
                 try
@@ -118,13 +126,14 @@ namespace PokemonGo.RocketAPI.Logic
                         await EvolveAllPokemonWithEnoughCandy();
                     }
 
-                    if (_clientSettings.AutoIncubate)
+					if (_clientSettings.AutoIncubate)
                     {
+						//WIP
                         await StartIncubation();
                     }
 
-                    await TransferDuplicatePokemon(_clientSettings.keepPokemonsThatCanEvolve);
-                    await RecycleItems();
+					await TransferDuplicatePokemon(_clientSettings.keepPokemonsThatCanEvolve);
+					await RecycleItems();
                     await ExecuteFarmingPokestopsAndPokemons(_client);
 
                 }
@@ -132,12 +141,18 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     throw;
                 }
-                catch (Exception ex)
+				catch (NullReferenceException ex)
+				{
+					Logger.Write($"Exception: {ex}", LogLevel.Error);
+					System.Windows.Forms.MessageBox.Show("You account is probably banned. Try to login on your phone. Press OK to try again!");
+				}
+				catch (Exception ex)
                 {
-                    Logger.Write($"Exception: {ex}", LogLevel.Error);
-                }
+					Logger.Write($"Exception: {ex}", LogLevel.Error);
+					await Task.Delay(10000);
+				}
                 Logger.ColoredConsoleWrite(ConsoleColor.Green, "Starting again in 10 seconds...");
-                await Task.Delay(10000);
+                
             }
         }
 
@@ -327,11 +342,13 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     continue;
                 }
-                Logger.ColoredConsoleWrite(ConsoleColor.Green, $"Next Pokestop: {fortInfo.Name} in {distance:0.##}m distance.");
+				TaskVars.task = "move";
+				Logger.ColoredConsoleWrite(ConsoleColor.Green, $"Next Pokestop: {fortInfo.Name} in {distance:0.##}m distance.");
                 var update = await _navigation.HumanLikeWalking(new GeoCoordinate(pokeStop.Latitude, pokeStop.Longitude), _clientSettings.WalkingSpeedInKilometerPerHour, ExecuteCatchAllNearbyPokemons);
 
-                ////var fortInfo = await client.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                var fortSearch = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+				TaskVars.task = "farm";
+				////var fortInfo = await client.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+				var fortSearch = await _client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
 
                 count++;
 
@@ -389,19 +406,30 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     failed_softban++;
                     if (failed_softban >= 6)
-                    {  
-                        Logger.Error("Detected a softban. Trying to use our special 1337 unban methode."); 
-                        for (int i = 0; i < 60; i++)
+                    {
+						int exp = 0;
+                        Logger.Error("Detected a softban. Trying to use our special 1337 unban method."); 
+                        for (int i = 0; i < 120; i++)
                         {
                             var unban = await client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                             if (unban.ExperienceAwarded > 0)
                             {
-                                break;
-                            }
+								exp = unban.ExperienceAwarded;
+								break;
+							}
                         }
-                        failed_softban = 0;
-                        Logger.ColoredConsoleWrite(ConsoleColor.Green, "Probably unbanned now.");
-                    }
+						if(exp > 0)
+						{
+							failed_softban = 0;
+							Logger.ColoredConsoleWrite(ConsoleColor.Green, "Probably unbanned now.");
+						}
+						else
+						{
+							System.Windows.Forms.MessageBox.Show("You got softbanned & Unban failed. Try again in 6-12 hours. Press OK to exit.");
+							Logger.ColoredConsoleWrite(ConsoleColor.Red, "Failed to unban. Exiting");
+							Environment.Exit(0);
+						}
+					}
                 }
 
                 await RandomHelper.RandomDelay(50, 200);
@@ -415,7 +443,7 @@ namespace PokemonGo.RocketAPI.Logic
 
         private async Task ExecuteCatchAllNearbyPokemons()
         {
-            _infoObservable.PushNewGeoLocations(new GeoCoordinate(_client.CurrentLatitude, _client.CurrentLongitude));
+			_infoObservable.PushNewGeoLocations(new GeoCoordinate(_client.CurrentLatitude, _client.CurrentLongitude));
             var client = _client;
             var mapObjects = await client.Map.GetMapObjects();
 
@@ -434,7 +462,7 @@ namespace PokemonGo.RocketAPI.Logic
                 count++;
                 if (count >= 3)
                 {
-                    count = 0;
+					count = 0;
                     await StatsLog(client);
 
                     if (_clientSettings.EvolvePokemonsIfEnoughCandy)
@@ -463,7 +491,8 @@ namespace PokemonGo.RocketAPI.Logic
                 
                 if (encounterPokemonResponse.Status == EncounterResponse.Types.Status.EncounterSuccess)
                 {
-                    var bestPokeball = await GetBestBall(encounterPokemonResponse?.WildPokemon);
+					TaskVars.task = "catch";
+					var bestPokeball = await GetBestBall(encounterPokemonResponse?.WildPokemon);
                     if (bestPokeball == ItemId.ItemUnknown)
                     { 
                         Logger.ColoredConsoleWrite(ConsoleColor.Red, $"No Pokeballs! - missed {pokemon.PokemonId} CP {encounterPokemonResponse?.WildPokemon?.PokemonData?.Cp} IV {Math.Round(PokemonInfo.CalculatePokemonPerfection(encounterPokemonResponse.WildPokemon.PokemonData))}%");
@@ -547,7 +576,8 @@ namespace PokemonGo.RocketAPI.Logic
 
         private async Task EvolveAllPokemonWithEnoughCandy(IEnumerable<PokemonId> filter = null)
         {
-            var pokemonToEvolve = await _client.Inventory.GetPokemonToEvolve(filter);
+			TaskVars.task = "evolve";
+			var pokemonToEvolve = await _client.Inventory.GetPokemonToEvolve(filter);
             if (pokemonToEvolve.Count() != 0)
             {
                 if (_clientSettings.UseLuckyEgg)
@@ -607,7 +637,7 @@ namespace PokemonGo.RocketAPI.Logic
                 var stats = playerStats.First();
 
                 Logger.ColoredConsoleWrite(ConsoleColor.DarkGray, "Incubation is still WIP");
-               // await _client.Inventory.UseItemEggIncubator(stats.KmWalked, incubators, unusedEggs, pokemons);
+                //await _client.Inventory.UseItemEggIncubator(stats.KmWalked, incubators, unusedEggs, pokemons);
             }
             catch (Exception)
             {
@@ -619,8 +649,9 @@ namespace PokemonGo.RocketAPI.Logic
         private async Task TransferDuplicatePokemon(bool keepPokemonsThatCanEvolve = false)
         {
             if (_clientSettings.TransferDoublePokemons)
-            { 
-                var duplicatePokemons = await _client.Inventory.GetDuplicatePokemonToTransfer(keepPokemonsThatCanEvolve); 
+            {
+				TaskVars.task = "transfer";
+				var duplicatePokemons = await _client.Inventory.GetDuplicatePokemonToTransfer(keepPokemonsThatCanEvolve); 
                 //var duplicatePokemons = await _client.Inventory.GetDuplicatePokemonToTransfer(keepPokemonsThatCanEvolve); Is doch retarded
  
 
@@ -660,7 +691,8 @@ namespace PokemonGo.RocketAPI.Logic
 
         private async Task RecycleItems(bool forcerefresh = false)
         {
-            var items = await _client.Inventory.GetItemsToRecycle(_clientSettings);
+			TaskVars.task = "recycle";
+			var items = await _client.Inventory.GetItemsToRecycle(_clientSettings);
 
             foreach (var item in items)
             {  

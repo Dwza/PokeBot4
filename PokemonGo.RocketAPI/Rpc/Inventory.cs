@@ -528,7 +528,8 @@ namespace PokemonGo.RocketAPI.Rpc
             if (stat == null)
                 return;
 
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configs");
+
+			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "pokebot4");
 
             if (Directory.Exists(path))
             {
