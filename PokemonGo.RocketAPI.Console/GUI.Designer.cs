@@ -80,6 +80,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rdoBMap = new System.Windows.Forms.RadioButton();
+            this.rdoGMap = new System.Windows.Forms.RadioButton();
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -112,10 +114,9 @@
             this.checkBox8 = new System.Windows.Forms.CheckBox();
             this.checkBox7 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.label29 = new System.Windows.Forms.Label();
-            this.rdoGMap = new System.Windows.Forms.RadioButton();
-            this.rdoBMap = new System.Windows.Forms.RadioButton();
+            this.pBoxCountry = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.groupBox4.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -125,6 +126,7 @@
             this.groupBox2.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pBoxCountry)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
@@ -641,6 +643,28 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Location Settings";
             // 
+            // rdoBMap
+            // 
+            this.rdoBMap.AutoSize = true;
+            this.rdoBMap.Checked = true;
+            this.rdoBMap.Location = new System.Drawing.Point(136, 171);
+            this.rdoBMap.Name = "rdoBMap";
+            this.rdoBMap.Size = new System.Drawing.Size(70, 17);
+            this.rdoBMap.TabIndex = 13;
+            this.rdoBMap.TabStop = true;
+            this.rdoBMap.Text = "Bing Map";
+            this.rdoBMap.UseVisualStyleBackColor = true;
+            // 
+            // rdoGMap
+            // 
+            this.rdoGMap.AutoSize = true;
+            this.rdoGMap.Location = new System.Drawing.Point(42, 171);
+            this.rdoGMap.Name = "rdoGMap";
+            this.rdoGMap.Size = new System.Drawing.Size(88, 17);
+            this.rdoGMap.TabIndex = 12;
+            this.rdoGMap.Text = "Google Maps";
+            this.rdoGMap.UseVisualStyleBackColor = true;
+            // 
             // button2
             // 
             this.button2.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
@@ -964,6 +988,24 @@
             this.checkBox3.Text = "Evolve Pokemons if enough candy\r\n";
             this.checkBox3.UseVisualStyleBackColor = true;
             // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(19, 649);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(367, 13);
+            this.label29.TabIndex = 47;
+            this.label29.Text = "Attention! If you run into any issues regarding Memory, disable Pokemon List!";
+            // 
+            // pBoxCountry
+            // 
+            this.pBoxCountry.Image = ((System.Drawing.Image)(resources.GetObject("pBoxCountry.Image")));
+            this.pBoxCountry.Location = new System.Drawing.Point(38, 37);
+            this.pBoxCountry.Name = "pBoxCountry";
+            this.pBoxCountry.Size = new System.Drawing.Size(29, 21);
+            this.pBoxCountry.TabIndex = 48;
+            this.pBoxCountry.TabStop = false;
+            // 
             // pictureBox2
             // 
             this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
@@ -975,43 +1017,13 @@
             this.pictureBox2.TabIndex = 37;
             this.pictureBox2.TabStop = false;
             // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(19, 649);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(367, 13);
-            this.label29.TabIndex = 47;
-            this.label29.Text = "Attention! If you run into any issues regarding Memory, disable Pokemon List!";
-            // 
-            // rdoGMap
-            // 
-            this.rdoGMap.AutoSize = true;
-            this.rdoGMap.Location = new System.Drawing.Point(42, 171);
-            this.rdoGMap.Name = "rdoGMap";
-            this.rdoGMap.Size = new System.Drawing.Size(88, 17);
-            this.rdoGMap.TabIndex = 12;
-            this.rdoGMap.Text = "Google Maps";
-            this.rdoGMap.UseVisualStyleBackColor = true;
-            // 
-            // rdoBMap
-            // 
-            this.rdoBMap.AutoSize = true;
-            this.rdoBMap.Checked = true;
-            this.rdoBMap.Location = new System.Drawing.Point(136, 171);
-            this.rdoBMap.Name = "rdoBMap";
-            this.rdoBMap.Size = new System.Drawing.Size(70, 17);
-            this.rdoBMap.TabIndex = 13;
-            this.rdoBMap.TabStop = true;
-            this.rdoBMap.Text = "Bing Map";
-            this.rdoBMap.UseVisualStyleBackColor = true;
-            // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(752, 684);
+            this.Controls.Add(this.pBoxCountry);
             this.Controls.Add(this.label29);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox7);
@@ -1049,6 +1061,7 @@
             this.groupBox8.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pBoxCountry)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1143,6 +1156,7 @@
 		private System.Windows.Forms.Label label29;
         private System.Windows.Forms.RadioButton rdoBMap;
         private System.Windows.Forms.RadioButton rdoGMap;
+        private System.Windows.Forms.PictureBox pBoxCountry;
     }
 }
 

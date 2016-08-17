@@ -11,6 +11,7 @@
     <AssemblyName>PokemonGo.RocketAPI.Console</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,7 +24,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -162,13 +162,14 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="app.manifest" />
-    <EmbeddedResource Include="Lang\de.json" />
-    <EmbeddedResource Include="Lang\france.json" />
-    <EmbeddedResource Include="Lang\italian.json" />
-    <EmbeddedResource Include="Lang\ptBR.json" />
-    <EmbeddedResource Include="Lang\ru.json" />
-    <EmbeddedResource Include="Lang\spain.json" />
-    <EmbeddedResource Include="Lang\tr.json" />
+    <EmbeddedResource Include="Lang\de-DE.json" />
+    <EmbeddedResource Include="Lang\fr-FR.json" />
+    <EmbeddedResource Include="Lang\it-IT.json" />
+    <EmbeddedResource Include="Lang\pt-BR.json" />
+    <EmbeddedResource Include="Lang\ru-RU.json" />
+    <EmbeddedResource Include="Lang\es-ES.json" />
+    <EmbeddedResource Include="Lang\tr-TR.json" />
+    <None Include="Lang\id-ID.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -228,9 +229,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Resources\encrypt.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\flag.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

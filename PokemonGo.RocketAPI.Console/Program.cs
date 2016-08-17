@@ -377,6 +377,8 @@ namespace PokemonGo.RocketAPI.Console
 
         public static string mapType = "Bing";
 
+        public static IDictionary<string, int> flagCoords = new Dictionary<string, int>();
+        
         public static Logic.LogicInfoObservable infoObservable = new Logic.LogicInfoObservable();
     }
 }

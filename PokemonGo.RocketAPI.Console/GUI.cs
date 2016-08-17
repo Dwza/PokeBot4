@@ -73,13 +73,6 @@ namespace PokemonGo.RocketAPI.Console
         private void GUI_Load(object sender, EventArgs e)
         {
 
-            /*
-             * CultureInfo ci = CultureInfo.CurrentUICulture;
-             * ci.Name // en-US, de-DE etc.
-             * 
-             * Autochoose language
-             */ 
-
             // Create missing Files
             Directory.CreateDirectory(Program.path);
             Directory.CreateDirectory(Program.path_translation);
@@ -93,6 +86,7 @@ namespace PokemonGo.RocketAPI.Console
             }
 
             // Load Languages Files always UP2Date
+            /*
             try
             {
                 ExtendedWebClient client = new ExtendedWebClient();
@@ -119,8 +113,68 @@ namespace PokemonGo.RocketAPI.Console
                     Extract("PokemonGo.RocketAPI.Console", Program.path_translation, "Lang", l);
                 }
             }
-
+            */
             TranslationHandler.Init();
+
+            //Autoselect default language
+            CultureInfo ci = CultureInfo.CurrentUICulture;
+            string[] lng = ci.Name.Split('-');
+
+            //Flagsize B65 H46
+            //Imagesize B450 W415
+
+            Globals.flagCoords["de-DE_x"] = 418;
+            Globals.flagCoords["de-DE_y"] = 252;
+
+            Globals.flagCoords["es-ES_x"] = 288;
+            Globals.flagCoords["es-ES_y"] = 206;
+
+            Globals.flagCoords["fr-FR_x"] = 33;
+            Globals.flagCoords["fr-FR_y"] = 252;
+
+            Globals.flagCoords["id-ID_x"] = 418;
+            Globals.flagCoords["id-ID_y"] = -24;
+
+            Globals.flagCoords["it-IT_x"] = 418;
+            Globals.flagCoords["it-IT_y"] = 68;
+
+            Globals.flagCoords["pt-BR_x"] = -158;
+            Globals.flagCoords["pt-BR_y"] = -209;
+
+            Globals.flagCoords["ru-RU_x"] = 288;
+            Globals.flagCoords["ru-RU_y"] = -208;
+
+            Globals.flagCoords["tr-TR_x"] = -288;
+            Globals.flagCoords["tr-TR_y"] = -347;
+
+            Globals.flagCoords["en-US_x"] = 223;
+            Globals.flagCoords["en-US_y"] = -347;
+
+            TranslationHandler.SelectLangauge(ci.Name);
+
+            try
+            {
+                pBoxCountry.Padding = new Padding(Globals.flagCoords[ci.Name + "_x"] * -1, Globals.flagCoords[ci.Name + "_y"], Globals.flagCoords[ci.Name + "_x"], Globals.flagCoords[ci.Name + "_y"] * -1);
+            }
+            catch (Exception ex)
+            {
+                //String err = ex.Message;
+                MessageBox.Show("Language: " + ci.Name + " was not found. Default language was selected" );
+                //Set DefaultFlag
+                pBoxCountry.Padding = new Padding(Globals.flagCoords["en-US_x"] * -1, Globals.flagCoords["en-US_y"], Globals.flagCoords["en-US_x"], Globals.flagCoords["en-US_y"] * -1);
+
+                
+            }
+
+            //string sCustom = "id-ID";
+            //pBoxCountry.Padding = new Padding(Globals.flagCoords[sCustom + "_x"] * -1, Globals.flagCoords[sCustom + "_y"], Globals.flagCoords[sCustom + "_x"], Globals.flagCoords[sCustom + "_y"] * -1);
+
+
+            pBoxCountry.Image = Properties.Resources.countryflags;
+            pBoxCountry.SizeMode = PictureBoxSizeMode.CenterImage;
+            
+            load_lang();
+
 
             comboBox1.DisplayMember = "Text";
             var types = new[] {
@@ -877,7 +931,7 @@ namespace PokemonGo.RocketAPI.Console
         private void load_lang()
         {
             //TranslationHandler.getString("username", "Username :");
-
+            //TranslationHandler.SelectLangauge("xx");
             Globals.acc = comboBox1.SelectedIndex == 0 ? Enums.AuthType.Google : Enums.AuthType.Ptc;
             if (comboBox1.SelectedIndex == 0)
             {
@@ -890,6 +944,7 @@ namespace PokemonGo.RocketAPI.Console
 
             label1.Text = TranslationHandler.GetString("accountType", "Account Type:");
             //label2.Text = TranslationHandler.getString("username", "Username:");
+            //TranslationHandler.SelectLangauge("de");
             label3.Text = TranslationHandler.GetString("password", "Password:");
             groupBox2.Text = TranslationHandler.GetString("locationSettings", "Location Settings");
             label7.Text = TranslationHandler.GetString("speed", "Speed:");
@@ -932,6 +987,7 @@ namespace PokemonGo.RocketAPI.Console
             checkBox11.Text = TranslationHandler.GetString("keepPokemonWhichCanBeEvolved", "Keep Pokemons which can be evolved");
             chkAutoIncubate.Text = TranslationHandler.GetString("autoIncubate", "Auto incubate");
             chkUseBasicIncubators.Text = TranslationHandler.GetString("useBasicIncubators", "Use basic incubators");
+            label29.Text = TranslationHandler.GetString("memoryIssues", "Attention! If you run into any issues regarding Memory, disable Pokemon List!!!!");
         }
 
         public static void Extract(string nameSpace, string outDir, string internalFilePath, string resourceName)

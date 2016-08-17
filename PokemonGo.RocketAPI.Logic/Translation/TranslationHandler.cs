@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Resources;
+using System.Windows.Forms;
 
 /**
     Written by DeltaCore (https://github.com/DeltaCore)
@@ -15,6 +19,7 @@ namespace PokemonGo.RocketAPI.Logic.Translation
 
         public static void Init()
         {
+            
             foreach (string file in System.IO.Directory.GetFiles("Translations"))
             {
                 if (file.EndsWith(".json"))
